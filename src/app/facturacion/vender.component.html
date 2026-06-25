@@ -1,0 +1,151 @@
+<div class="vender-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Vender</h1>
+    <div class="user-info">
+      <span>{{ currentUser.name }}</span>
+    </div>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Sección de búsqueda de cliente -->
+    <div class="busqueda-cliente" *ngIf="!clienteEncontrado">
+      <h2>🔍 Buscar Cliente</h2>
+      <div class="busqueda-input">
+        <input 
+          type="text" 
+          placeholder="Ingrese DNI o documento..."
+          [(ngModel)]="documentoBusqueda"
+          (keyup.enter)="buscarCliente()"
+          class="input-busqueda"
+        >
+        <button class="btn-buscar" (click)="buscarCliente()">
+          <i class="fas fa-search"></i>
+          Buscar
+        </button>
+      </div>
+    </div>
+
+    <!-- Información del cliente encontrado (después de buscar) -->
+    <div class="cliente-encontrado-section" *ngIf="clienteEncontrado">
+      <div class="cliente-info-compacta">
+        <div class="cliente-header-info">
+          <h3>👤 {{ clienteEncontrado.nombresApellidos }}</h3>
+          <span class="documento-info">{{ clienteEncontrado.tipoDocumento }}: {{ clienteEncontrado.numeroDocumento }}</span>
+        </div>
+        <button class="btn-cambiar-cliente" (click)="cambiarCliente()">
+          <i class="fas fa-exchange-alt"></i>
+          Cambiar Cliente
+        </button>
+      </div>
+    </div>
+
+    <!-- Sección de escaneo de código de barras (SOLO DESPUÉS DE BUSCAR CLIENTE) -->
+     
+    <div class="scanner-section" *ngIf="clienteEncontrado">
+      <h2>📱 Escáner de Código de Barras</h2>
+      <div class="cliente-actual-info">
+        <p><strong>Cliente Actual:</strong> {{ clienteEncontrado.nombresApellidos }}</p>
+        <p><strong>Documento:</strong> {{ clienteEncontrado.tipoDocumento }}: {{ clienteEncontrado.numeroDocumento }}</p>
+      </div>
+      <div class="scanner-container">
+        <div class="scanner-input-group">
+          <input 
+            type="text" 
+            placeholder="Escanee código de barras o ingréselo con teclado..."
+            [(ngModel)]="codigoEscaneado"
+            (keyup.enter)="buscarProductoPorCodigo()"
+            class="scanner-input"
+            autofocus
+          >
+          <button class="btn-scan" (click)="activarScanner()">
+            <i class="fas fa-barcode"></i>
+            Escanear
+          </button>
+        </div>
+        
+        <!-- Producto encontrado -->
+        <div class="producto-encontrado" *ngIf="productoEncontrado">
+          <div class="producto-card-mini">
+            <h4>{{ productoEncontrado.nombre }}</h4>
+            <p>{{ productoEncontrado.detalle }} | S/. {{ productoEncontrado.precio | number:'1.2-2' }}</p>
+            <p>Stock: {{ productoEncontrado.stock }} unidades</p>
+            <div class="accion-rapida">
+              <button class="btn-agregar-rapido" (click)="agregarDirectamenteAlCarrito(productoEncontrado)">
+                <i class="fas fa-plus"></i>
+                Agregar al Carrito
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de productos (condicional) -->
+    <div class="productos-section" *ngIf="mostrarProductosSection">
+      <h2>🛒 Productos Disponibles</h2>
+      <div class="productos-grid">
+        <div class="producto-card" *ngFor="let producto of productosConStock">
+          <div class="producto-header">
+            <h4>{{ producto.nombre }}</h4>
+            <span class="producto-detalle">{{ producto.detalle }}</span>
+            <span class="precio">${{ producto.precio | number:'1.2-2' }}</span>
+          </div>
+          <div class="producto-controls">
+            <label>Cantidad:</label>
+            <input 
+              type="number" 
+              min="0" 
+              [max]="producto.stock"
+              [(ngModel)]="producto.cantidad"
+              (input)="actualizarCantidad(producto, $event)"
+              class="input-cantidad"
+            >
+            <span class="subtotal">Subtotal: ${{ producto.subtotal | number:'1.2-2' }}</span>
+            <button class="btn-agregar" (click)="agregarAlCarrito(producto)" [disabled]="producto.cantidad <= 0 || producto.cantidad > producto.stock">
+              <i class="fas fa-plus"></i>
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="no-productos" *ngIf="productosConStock.length === 0">
+        <p>🚫 No hay productos disponibles con stock en este momento.</p>
+      </div>
+    </div>
+
+    <!-- Sección del carrito (condicional) -->
+    <div class="carrito-section" *ngIf="carrito.length > 0">
+      <h2>Carrito de Compras</h2>
+      <div class="carrito-content" *ngIf="carrito.length > 0; else emptyCarrito">
+        <div class="carrito-items">
+          <div class="carrito-item" *ngFor="let item of carrito">
+            <div class="item-info">
+              <h4>{{ item.nombre }}</h4>
+              <span class="item-precio">${{ item.precio | number:'1.2-2' }} x {{ item.cantidad }}</span>
+            </div>
+            <div class="item-subtotal">${{ item.subtotal | number:'1.2-2' }}</div>
+            <button class="btn-eliminar" (click)="eliminarDelCarrito(item)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="carrito-total">
+          <h3>Total: ${{ totalVenta | number:'1.2-2' }}</h3>
+          <button class="btn-finalizar" (click)="finalizarVenta()">
+            <i class="fas fa-check"></i>
+            Finalizar Venta
+          </button>
+        </div>
+      </div>
+      
+      <ng-template #emptyCarrito>
+        <div class="empty-carrito">
+          <i class="fas fa-shopping-cart"></i>
+          <p>El carrito está vacío</p>
+          <p>Agrega productos para continuar</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>

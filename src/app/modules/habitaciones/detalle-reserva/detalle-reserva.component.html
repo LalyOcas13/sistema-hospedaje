@@ -1,0 +1,228 @@
+<div class="detalle-reserva-container">
+  <!-- Header -->
+  <div class="header">
+    <button class="btn-volver" (click)="volver()">
+      <i class="fas fa-arrow-left"></i>
+      Volver
+    </button>
+    <h1>Detalles de la Reserva</h1>
+    <div></div>
+  </div>
+
+  <!-- Mensaje de carga -->
+  <div *ngIf="cargando" class="cargando">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Cargando información...</p>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="error" class="error">
+    <i class="fas fa-exclamation-triangle"></i>
+    <p>{{ error }}</p>
+    <button class="btn-reintentar" (click)="cargarDatos()">Reintentar</button>
+  </div>
+
+  <!-- Contenido principal -->
+  <div *ngIf="!cargando && !error && habitacion && reserva" class="contenido">
+    
+    <!-- Información de la habitación -->
+    <div class="seccion habitacion-info">
+      <h2><i class="fas fa-bed"></i> Información de la Habitación</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Número:</label>
+          <span class="valor">{{ habitacion.numero }}</span>
+        </div>
+        <div class="info-item">
+          <label>Tipo:</label>
+          <span class="valor">{{ habitacion.tipo }}</span>
+        </div>
+        <div class="info-item">
+          <label>Precio:</label>
+          <span class="valor">${{ habitacion.precio }}/hora</span>
+        </div>
+        <div class="info-item">
+          <label>Capacidad:</label>
+          <span class="valor">{{ habitacion.capacidad }} personas</span>
+        </div>
+        <div class="info-item">
+          <label>Piso:</label>
+          <span class="valor">Piso {{ habitacion.piso }}</span>
+        </div>
+        <div class="info-item">
+          <label>Estado:</label>
+          <span class="badge estado-ocupada">{{ habitacion.estado.toUpperCase() }}</span>
+        </div>
+        <div class="info-item full-width" *ngIf="habitacion.descripcion">
+          <label>Descripción:</label>
+          <span class="valor">{{ habitacion.descripcion }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información del cliente -->
+    <div class="seccion cliente-info">
+      <h2><i class="fas fa-user"></i> Información del Cliente</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Nombre:</label>
+          <span class="valor">{{ reserva.cliente.nombres_apellidos }}</span>
+        </div>
+        <div class="info-item">
+          <label>DNI:</label>
+          <span class="valor">{{ reserva.cliente.nro_documento }}</span>
+        </div>
+        <div class="info-item">
+          <label>Teléfono:</label>
+          <span class="valor">{{ reserva.cliente.telefono || 'No registrado' }}</span>
+        </div>
+        <div class="info-item">
+          <label>Estado:</label>
+          <span class="badge" [class]="getEstadoReservaClass()">
+            <i [class]="getEstadoReservaIcon()"></i>
+            {{ reserva.estado }}
+          </span>
+        </div>
+        <div class="info-item" *ngIf="reserva.cliente.acompanante">
+          <label>Acompañante:</label>
+          <span class="valor">{{ reserva.cliente.acompanante }}</span>
+        </div>
+        <div class="info-item" *ngIf="reserva.cliente.nacionalidad">
+          <label>Nacionalidad:</label>
+          <span class="valor">{{ reserva.cliente.nacionalidad }}</span>
+        </div>
+        <div class="info-item" *ngIf="reserva.cliente.procedencia">
+          <label>Procedencia:</label>
+          <span class="valor">{{ reserva.cliente.procedencia }}</span>
+        </div>
+        <div class="info-item" *ngIf="reserva.cliente.placa">
+          <label>Placa:</label>
+          <span class="valor">{{ reserva.cliente.placa }}</span>
+        </div>
+        <div class="info-item" *ngIf="reserva.cliente.tipoVehiculo">
+          <label>Vehículo:</label>
+          <span class="valor">{{ reserva.cliente.tipoVehiculo }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información de la reserva -->
+    <div class="seccion reserva-info">
+      <h2><i class="fas fa-calendar-check"></i> Detalles de la Reserva</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Fecha:</label>
+          <span class="valor">{{ formatearFecha(reserva.fecha) }}</span>
+        </div>
+        <div class="info-item">
+          <label>Hora Entrada:</label>
+          <span class="valor">{{ formatearHora(reserva.hora_entrada) }}</span>
+        </div>
+        <div class="info-item">
+          <label>Hora Salida:</label>
+          <span class="valor">{{ formatearHora(reserva.hora_salida) }}</span>
+        </div>
+        <div class="info-item">
+          <label>Duración:</label>
+          <span class="valor">{{ calcularDuracion() }}</span>
+        </div>
+        <div class="info-item">
+          <label>Tiempo:</label>
+          <span class="valor">{{ reserva.tiempo }} minutos</span>
+        </div>
+        <div class="info-item">
+          <label>Subtotal:</label>
+          <span class="valor">${{ reserva.total + (reserva.total_descuento || 0) }}</span>
+        </div>
+        <div class="info-item" *ngIf="reserva.total_descuento && reserva.total_descuento > 0">
+          <label>Descuento:</label>
+          <span class="valor descuento">-${{ reserva.total_descuento }}</span>
+        </div>
+        <div class="info-item">
+          <label>Total:</label>
+          <span class="valor total">${{ reserva.total }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalle de Compras -->
+    <div class="seccion compras-info">
+      <h2><i class="fas fa-shopping-cart"></i> Detalle de Compras</h2>
+      <div *ngIf="comprasCliente.length > 0">
+        <div class="compras-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Productos</th>
+                <th>Total</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let compra of comprasCliente">
+                <td>{{ compra.fecha }}</td>
+                <td>{{ compra.productos.join(', ') }}</td>
+                <td>${{ compra.total | number:'1.2-2' }}</td>
+                <td>
+                  <span class="badge" [class.estado-pagado]="compra.estado === 'pagado'">
+                    {{ compra.estado }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="compras-total">
+          <div class="total-row">
+            <span class="label">Total de Compras:</span>
+            <span class="valor">${{ totalCompras | number:'1.2-2' }}</span>
+          </div>
+          <div class="total-row total-final">
+            <span class="label">Total a Pagar (Habitación + Compras):</span>
+            <span class="valor">${{ (reserva.total + totalCompras) | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="comprasCliente.length === 0" class="sin-compras">
+        <i class="fas fa-shopping-basket"></i>
+        <p>El cliente no ha realizado compras durante su estancia</p>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="seccion acciones">
+      <h2><i class="fas fa-cogs"></i> Acciones</h2>
+      <div class="acciones-grid">
+        <button class="btn btn-finalizar" 
+                (click)="finalizarReserva()" 
+                *ngIf="reserva.estado === 'Pagado' || reserva.estado === 'Pendiente'">
+          <i class="fas fa-stop-circle"></i>
+          Finalizar Reserva
+        </button>
+        <div class="grupo-imprimir">
+          <label>Tipo de Comprobante:</label>
+          <select [(ngModel)]="tipoComprobante" class="select-comprobante">
+            <option value="boleta">Boleta (DNI)</option>
+            <option value="factura">Factura (RUC)</option>
+          </select>
+          <div class="ruc-input-container" *ngIf="tipoComprobante === 'factura'">
+            <label>RUC:</label>
+            <input 
+              type="text" 
+              [(ngModel)]="rucIngresado" 
+              placeholder="Ingrese RUC (11 dígitos)"
+              maxlength="11"
+              class="input-ruc"
+            />
+          </div>
+          <button class="btn btn-imprimir" (click)="imprimirComprobante()">
+            <i class="fas fa-print"></i>
+            Imprimir Comprobante
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

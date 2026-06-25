@@ -1,0 +1,120 @@
+<div class="consumo-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>USUARIOS</h1>
+    <div class="user-info">
+      <span>{{ currentUser?.name || 'Adimistrador' }}</span>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-section">
+    <button class="add-consumo-button" (click)="showAgregarUsuarioModal()">
+      <i class="fas fa-plus"></i>
+      Agregar Usuario
+    </button>
+    
+    <div class="controls-and-search">
+      <div class="display-records">
+        <span>Mostrar</span>
+        <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+        <span>registros</span>
+      </div>
+      
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text" 
+          placeholder="Buscar..." 
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange()"
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive">
+    <table class="consumo-table">
+      <thead>
+        <tr>
+          <th>N°</th>
+          <th>NOMBRE Y APELLIDO</th>
+          <th>CORREO ELECTRÓNICO</th>
+          <th>ROL</th>
+          <th>ESTADO</th>
+          <th>ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of paginatedUsers; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="role-badge" [class.admin]="user.role === 'Administrador'">
+              {{ user.role }}
+            </span>
+          </td>
+          <td>
+            <span class="status-badge" [class.active]="user.status === 'Activo'">
+              {{ user.status }}
+            </span>
+          </td>
+          <td>
+            <button class="action-button edit" (click)="editUser(user)" title="Editar">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="action-button delete" (click)="deleteUser(user)" title="Eliminar">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button 
+      class="pagination-button" 
+      (click)="previousPage()" 
+      [disabled]="currentPage === 1"
+    >
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    
+    <span class="page-info">Pag{{ currentPage }}</span>
+    
+    <button 
+      class="pagination-button" 
+      (click)="nextPage()" 
+      [disabled]="currentPage === totalPages"
+    >
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+
+  
+</div>
+
+<!-- Modal para agregar usuario -->
+<app-agregar-usuario 
+  [isVisible]="showModal" 
+  (closeModalEvent)="hideAgregarUsuarioModal()" 
+  (usuarioGuardado)="onUsuarioGuardado($event)">
+</app-agregar-usuario>
+
+<!-- Modal para editar usuario -->
+<app-editar-usuario 
+  *ngIf="showEditModal && usuarioEditando"
+  [isVisible]="showEditModal" 
+  [usuario]="usuarioEditando"
+  (closeModalEvent)="hideEditModal()" 
+  (usuarioActualizado)="actualizarUsuario($event)">
+</app-editar-usuario>

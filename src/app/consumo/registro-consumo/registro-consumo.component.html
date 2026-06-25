@@ -1,0 +1,126 @@
+<div class="consumo-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>CONSUMO</h1>
+    <div class="user-info">
+      <span>{{ currentUser?.name || 'Laly Melissa Ocas Vasquez' }}</span>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-section">
+    <button class="add-consumo-button" (click)="agregarProducto()">
+      <i class="fas fa-plus"></i>
+      Agregar Producto
+    </button>
+    
+        
+    <div class="controls-and-search">
+      <div class="display-records">
+        <span>Mostrar</span>
+        <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+        <span>registros</span>
+      </div>
+      
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text" 
+          placeholder="Buscar..." 
+          [(ngModel)]="searchTerm" 
+          (ngModelChange)="onSearchChange()"
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive">
+    <table class="consumo-table">
+      <thead>
+        <tr>
+          <th>N°</th>
+          <th>NOMBRE</th>
+          <th>DETALLE</th>
+          <th>PRECIO</th>
+          <th>CANTIDAD</th>
+          <th>CÓDIGO BARRAS</th>
+          <th>ESTADO</th>
+          <th>ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of getPaginatedProductos(); let i = index">
+          <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.detalle }}</td>
+          <td>S/ {{ producto.precio.toFixed(2) }}</td>
+          <td>{{ producto.cantidad }}</td>
+          <td>
+            <span class="codigo-barras" *ngIf="producto.codigoBarras; else sinCodigo">
+              {{ producto.codigoBarras }}
+            </span>
+            <ng-template #sinCodigo>
+              <span class="sin-codigo">Sin código</span>
+            </ng-template>
+          </td>
+          <td>
+            <select 
+              class="estado-select" 
+              [(ngModel)]="producto.estado" 
+              (change)="actualizarEstado(producto)"
+            >
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+              <option value="Pendiente">Pendiente</option>
+              <option value="Agotado">Agotado</option>
+            </select>
+          </td>
+          <td>
+            <button class="action-button edit" (click)="editarProducto(producto.id)" title="Editar">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="action-button delete" (click)="eliminarProducto(producto.id)" title="Eliminar">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button 
+      class="pagination-button" 
+      (click)="previousPage()" 
+      [disabled]="currentPage === 1"
+    >
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    
+    <span class="page-info">Pag{{ currentPage }}</span>
+    
+    <button 
+      class="pagination-button" 
+      (click)="nextPage()" 
+      [disabled]="currentPage === totalPages"
+    >
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <!-- Modal Agregar Producto -->
+  <app-agregar-producto-modal 
+    [isVisible]="showModal" 
+    [isEditMode]="isEditMode"
+    [nuevoProducto]="nuevoProducto"
+    (closeModal)="hideModal()"
+    (saveProducto)="onProductoGuardado($event)">
+  </app-agregar-producto-modal>
+</div>

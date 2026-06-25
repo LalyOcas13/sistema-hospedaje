@@ -1,0 +1,771 @@
+/* Variables CSS */
+:root {
+    --color-primario: #007bff;
+    --color-exito: #28a745;
+    --color-advertencia: #ffc107;
+    --color-peligro: #dc3545;
+    --color-info: #17a2b8;
+    --color-secundario: #6c757d;
+
+    --fondo-principal: #f8f9fa;
+    --fondo-tarjeta: #ffffff;
+    --color-texto: #2c3e50;
+    --color-texto-claro: #6c757d;
+    --color-borde: #e9ecef;
+
+    --azul-primario: #2c3e50;
+    --azul-secundario: #34495e;
+    --gris-claro: #ecf0f1;
+    --gris-medio: #bdc3c7;
+    --naranja-accion: #ff9800;
+}
+
+/* Contenedor principal */
+.mensual-container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fondo animado */
+.mensual-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 152, 0, 0.05) 0%, transparent 50%);
+    animation: backgroundFloat 20s ease-in-out infinite;
+}
+
+@keyframes backgroundFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(-20px, -20px) rotate(120deg); }
+    66% { transform: translate(20px, -10px) rotate(240deg); }
+}
+
+/* Header */
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 30px 40px;
+    margin: 0 40px 30px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 10;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #ff9800);
+    border-radius: 30px 30px 0 0;
+}
+
+.header h1 {
+    font-size: 2.5em;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.user-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.user-info::before {
+    content: '👤';
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+/* Controles superiores */
+.controles-superiores {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px 30px 40px;
+    position: relative;
+    z-index: 10;
+}
+
+.filtros {
+    display: flex;
+    gap: 15px;
+}
+
+.select-filtro {
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 14px;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.select-filtro:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.controles-vista {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-vista {
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-vista:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: #667eea;
+    color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.btn-vista.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn-exportar, .btn-imprimir {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-imprimir {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+}
+
+.btn-exportar:hover, .btn-imprimir:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+}
+
+/* Vista de Resumen */
+.vista-resumen {
+    padding: 0 40px 40px 40px;
+    position: relative;
+    z-index: 10;
+}
+
+.resumen-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.tarjeta-resumen {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.tarjeta-resumen:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+}
+
+.tarjeta-resumen.principal {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(255, 255, 255, 0.95));
+    border-left: 6px solid #667eea;
+}
+
+.tarjeta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.tarjeta-header h3 {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.periodo {
+    background: #667eea;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.tarjeta-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.metrica-principal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.metrica-principal .label {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.metrica-principal .valor {
+    font-size: 2.5em;
+    font-weight: 800;
+    color: #667eea;
+}
+
+.metricas-desglose {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 15px;
+}
+
+.metrica {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.metrica .label {
+    font-weight: 600;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.metrica .valor {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.metrica .valor.pagado {
+    color: #28a745;
+}
+
+.metrica .valor.pendiente {
+    color: #ffc107;
+}
+
+.porcentaje {
+    font-size: 0.9em;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.metrica-principal + .metrica {
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.metrica-principal + .metrica:last-child {
+    border-bottom: none;
+}
+
+/* Habitación más rentable */
+.habitacion-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.habitacion-nombre {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #2c3e50;
+    padding: 10px 15px;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.habitacion-metricas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Estadísticas */
+.estadisticas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.tarjeta-estadistica {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.tarjeta-estadistica:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+}
+
+.productos-ranking {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.producto-ranking {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.producto-ranking:hover {
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.ranking {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.producto-nombre {
+    flex: 1;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.producto-cantidad {
+    font-weight: 700;
+    color: #667eea;
+}
+
+.ventas-diarias {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.venta-dia {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.venta-dia:hover {
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.dia {
+    font-weight: 600;
+    color: #2c3e50;
+    min-width: 60px;
+}
+
+.venta-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.venta-info .total {
+    font-weight: 700;
+    color: #667eea;
+    font-size: 16px;
+}
+
+.venta-info .cantidad {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* Vista de Detalles */
+.vista-detalles {
+    padding: 0 40px 40px 40px;
+    position: relative;
+    z-index: 10;
+}
+
+.tabla-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.tabla-ventas {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.tabla-ventas th {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+}
+
+.tabla-ventas td {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 14px;
+}
+
+.tabla-ventas tr:hover {
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.productos-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.producto-tag {
+    background: #e9ecef;
+    color: #2c3e50;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.total {
+    font-weight: 700;
+    color: #667eea;
+    font-size: 16px;
+}
+
+.estado-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.estado-pagado {
+    background: #28a745;
+    color: white;
+}
+
+.estado-pendiente {
+    background: #ffc107;
+    color: white;
+}
+
+.estado-parcial {
+    background: #17a2b8;
+    color: white;
+}
+
+/* Estadísticas de Habitaciones */
+.habitaciones-section {
+    margin-top: 30px;
+}
+
+.tarjeta-habitaciones {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.tarjeta-habitaciones:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+}
+
+.habitaciones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.habitacion-card {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.habitacion-card:hover {
+    background: rgba(102, 126, 234, 0.05);
+    border-color: rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+}
+
+.habitacion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.habitacion-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.habitacion-nombre {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.habitacion-tipo {
+    font-size: 0.9em;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.habitacion-estado {
+    display: flex;
+    align-items: center;
+}
+
+.estado-disponible {
+    background: #28a745;
+    color: white;
+}
+
+.estado-ocupada {
+    background: #ffc107;
+    color: white;
+}
+
+.estado-mantenimiento {
+    background: #dc3545;
+    color: white;
+}
+
+.habitacion-metricas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.habitacion-metricas .metrica {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.habitacion-metricas .label {
+    font-weight: 600;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.habitacion-metricas .valor {
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.ocupacion-barra {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    max-width: 150px;
+}
+
+.ocupacion-progreso {
+    height: 8px;
+    border-radius: 4px;
+    background: #e9ecef;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.ocupacion-progreso.ocupacion-alta {
+    background: linear-gradient(90deg, #28a745, #20c997);
+}
+
+.ocupacion-progreso.ocupacion-media {
+    background: linear-gradient(90deg, #ffc107, #fd7e14);
+}
+
+.ocupacion-progreso.ocupacion-baja {
+    background: linear-gradient(90deg, #dc3545, #e83e8c);
+}
+
+.ocupacion-valor {
+    font-weight: 700;
+    font-size: 14px;
+    color: #2c3e50;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mensual-container {
+        padding: 0;
+    }
+
+    .header {
+        padding: 20px;
+        margin: 0 20px 20px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .header h1 {
+        font-size: 2em;
+    }
+
+    .controles-superiores {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 20px 20px 20px;
+    }
+
+    .filtros {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .controles-vista {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .resumen-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .estadisticas-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .vista-resumen, .vista-detalles {
+        padding: 0 20px 20px 20px;
+    }
+
+    .tabla-container {
+        padding: 20px;
+    }
+
+    .tabla-ventas {
+        font-size: 12px;
+    }
+
+    .tabla-ventas th,
+    .tabla-ventas td {
+        padding: 10px 5px;
+    }
+}

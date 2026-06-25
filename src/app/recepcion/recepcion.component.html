@@ -1,0 +1,30 @@
+<div class="recepcion-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Módulo de Recepción</h1>
+    <div class="user-info">
+      <span>{{ currentUser.name }}</span>
+    </div>
+  </div>
+
+  <!-- Menú de Navegación -->
+  <div class="menu-grid">
+    <div 
+      *ngFor="let item of menuItems" 
+      class="menu-card"
+      [ngClass]="'card-' + item.color"
+      (click)="navigateTo(item.route)"
+    >
+      <div class="card-icon">
+        <i [class]="item.icon"></i>
+      </div>
+      <div class="card-content">
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+      </div>
+      <div class="card-arrow">
+        <i class="fas fa-arrow-right"></i>
+      </div>
+    </div>
+  </div>
+</div>

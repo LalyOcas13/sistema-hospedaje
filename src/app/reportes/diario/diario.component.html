@@ -1,0 +1,138 @@
+<div class="diario-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Reporte Diario</h1>
+    <div class="user-info">
+      <span>{{ currentUser.name }}</span>
+    </div>
+  </div>
+
+  <!-- Selector de vista y fecha -->
+  <div class="controles-superiores">
+    <div class="selector-vista">
+      <button 
+        class="btn-vista" 
+        [class.active]="vistaActual === 'resumen'"
+        (click)="cambiarVista('resumen')"
+      >
+        <i class="fas fa-chart-pie"></i>
+        Resumen
+      </button>
+      <button 
+        class="btn-vista" 
+        [class.active]="vistaActual === 'detalles'"
+        (click)="cambiarVista('detalles')"
+      >
+        <i class="fas fa-list"></i>
+        Detalles
+      </button>
+    </div>
+    
+    <div class="controles-fecha">
+      <input 
+        type="date" 
+        [(ngModel)]="fechaSeleccionada"
+        (change)="onFechaChange()"
+        class="input-fecha"
+      >
+      <button class="btn-exportar" (click)="exportarReporte()">
+        <i class="fas fa-download"></i>
+        Exportar
+      </button>
+      <button class="btn-imprimir" (click)="imprimirReporte()">
+        <i class="fas fa-print"></i>
+        Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- Vista de Resumen -->
+  <div class="vista-resumen" *ngIf="vistaActual === 'resumen'">
+    <div class="resumen-grid">
+      <!-- Tarjeta de totales -->
+      <div class="tarjeta-resumen principal">
+        <div class="tarjeta-header">
+          <h3>📊 Resumen del Día</h3>
+          <span class="fecha">{{ resumenDiario.fecha }}</span>
+        </div>
+        <div class="tarjeta-contenido">
+          <div class="metrica">
+            <span class="label">Total Ventas</span>
+            <span class="valor principal">${{ resumenDiario.totalVentas | number:'1.2-2' }}</span>
+          </div>
+          <div class="metricas-desglose">
+            <div class="metrica">
+              <span class="label">Pagado</span>
+              <span class="valor pagado">${{ resumenDiario.totalPagado | number:'1.2-2' }}</span>
+            </div>
+            <div class="metrica">
+              <span class="label">Pendiente</span>
+              <span class="valor pendiente">${{ resumenDiario.totalPendiente | number:'1.2-2' }}</span>
+            </div>
+          </div>
+          <div class="metrica">
+            <span class="label">Cantidad de Ventas</span>
+            <span class="valor">{{ resumenDiario.cantidadVentas }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Productos más vendidos -->
+      <div class="tarjeta-resumen">
+        <div class="tarjeta-header">
+          <h3>🏆 Productos Más Vendidos</h3>
+        </div>
+        <div class="tarjeta-contenido">
+          <div class="productos-lista">
+            <div class="producto-item" *ngFor="let producto of resumenDiario.productosMasVendidos">
+              <span class="producto-nombre">{{ producto.nombre }}</span>
+              <span class="producto-cantidad">{{ producto.cantidad }} unidades</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista de Detalles -->
+  <div class="vista-detalles" *ngIf="vistaActual === 'detalles'">
+    <div class="tabla-container">
+      <table class="tabla-ventas">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Habitación</th>
+            <th>Productos</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let venta of ventasDiarias">
+            <td>{{ venta.id }}</td>
+            <td>{{ venta.cliente }}</td>
+            <td>{{ venta.habitacion }}</td>
+            <td>
+              <div class="productos-cell">
+                <span *ngFor="let producto of venta.productos; let last = last" 
+                      class="producto-tag">
+                  {{ producto }}{{ last ? '' : ', ' }}
+                </span>
+              </div>
+            </td>
+            <td class="total">${{ venta.total | number:'1.2-2' }}</td>
+            <td>
+              <span class="estado-badge" [ngClass]="getEstadoClass(venta.estado)">
+                <i [class]="getEstadoIcon(venta.estado)"></i>
+                {{ venta.estado }}
+              </span>
+            </td>
+            <td>{{ venta.fecha }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

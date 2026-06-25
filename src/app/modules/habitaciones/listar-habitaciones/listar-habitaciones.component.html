@@ -1,0 +1,112 @@
+<div class="habitaciones-container">
+  <div class="encabezado-principal">
+    <div class="titulo-encabezado">
+      <i class="bx bx-bed"></i>
+      <h1>Todas las Habitaciones</h1>
+    </div>
+    <div class="boton-agregar">
+      <button class="btn-estado-toggle" 
+              (click)="actualizarEstados()" 
+              [class.actualizando]="cargando"
+              title="Actualizar estados">
+        <div class="toggle-indicator">
+          <i class="bx bx-refresh" [class.rotating]="cargando"></i>
+        </div>
+        <span class="toggle-text">{{ cargando ? 'Actualizando...' : 'Estados' }}</span>
+      </button>
+      <button class="btn-agregar" 
+              routerLink="/habitaciones/crear" 
+              title="Agregar nueva habitación">
+        <i class="bx bx-plus"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensaje de carga -->
+  <div *ngIf="cargando" class="cargando">
+    <p>Cargando habitaciones...</p>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button (click)="cargarHabitaciones()">Reintentar</button>
+  </div>
+
+  <div class="area-contenido" *ngIf="!cargando && !error">
+    <div class="grid-habitaciones">
+      <div class="tarjeta-habitacion" 
+           *ngFor="let habitacion of habitacionesFiltradas; trackBy: trackByHabitacion" 
+           [ngClass]="{
+             'ocupado': habitacion.estado === 'ocupada',
+             'disponible': habitacion.estado === 'disponible',
+             'reserva': habitacion.estado === 'reservada',
+             'mantenimiento': habitacion.estado === 'mantenimiento'
+           }"
+           [ngStyle]="{
+             'background-color': habitacion.estado === 'ocupada' ? '#ff6b6b' : 
+                               habitacion.estado === 'disponible' ? '#4ecdc4' : 
+                               '#45b7d1',
+             'color': '#fff'
+           }"
+           (click)="reservarHabitacion(habitacion)"
+           [class.cursor-pointer]="habitacion.estado === 'disponible'">
+
+        <!-- Botones de acción -->
+        <div class="botones-accion">
+          <button class="btn-editar" 
+                  (click)="editarHabitacion(habitacion)" 
+                  title="Editar habitación">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn-eliminar" 
+                  (click)="eliminarHabitacion(habitacion)" 
+                  title="Eliminar habitación">
+            <i class="bx bx-trash"></i>
+          </button>
+        </div>
+
+        <!-- Imagen de la habitación -->
+        <div class="imagen-habitacion">
+          <img [src]="habitacion.imagen || 'assets/images/default-room.jpg'" 
+               [alt]="`Habitación ${habitacion.numero}`" 
+               (error)="onImageError($event, habitacion)" />
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="contenido-tarjeta">
+          <!-- Número de habitación -->
+          <div class="numero-habitacion">
+            {{ habitacion.numero }}
+          </div>
+
+          <!-- Información inferior -->
+          <div class="info-inferior">
+            <div class="tipo-habitacion">{{ habitacion.tipo }}</div>
+            <div class="capacidad-habitacion">{{ habitacion.capacidad || 2 }} personas</div>
+          </div>
+        </div>
+
+        <!-- Etiqueta de estado -->
+        <div class="etiqueta-estado">
+          <span *ngIf="habitacion.estado === 'disponible'">Disponible</span>
+          <span *ngIf="habitacion.estado === 'ocupada'">Ocupado</span>
+          <span *ngIf="habitacion.estado === 'reservada'">Reservado</span>
+          <span *ngIf="habitacion.estado === 'mantenimiento'">mantenimiento</span>
+       
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="navegacion-footer" *ngIf="!cargando && !error">
+    <div class="lado-izquierdo">
+      <button class="btn-atras" *ngIf="puedeIrAtras()" (click)="atras()">Atrás</button>
+      <div class="info-pagina" *ngIf="!puedeIrAtras()">{{ obtenerInfoPagina() }}</div>
+    </div>
+    <div class="lado-derecho">
+      <div class="info-pagina" *ngIf="puedeIrAtras()">{{ obtenerInfoPagina() }}</div>
+      <button class="btn-siguiente" *ngIf="puedeIrSiguiente()" (click)="siguiente()">Siguiente</button>
+    </div>
+  </div>
+</div>

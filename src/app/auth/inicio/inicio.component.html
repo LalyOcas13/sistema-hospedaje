@@ -1,0 +1,31 @@
+<div class="dashboard-container">
+  <div class="background-overlay"></div>
+  <div class="content-wrapper">
+    <h1>Bienvenido al Sistema de Hotelería</h1>
+    
+    <!-- Botones de Pisos -->
+    <div class="floor-buttons">
+      <button class="floor-btn" (click)="selectFloor(1)" [class.active]="selectedFloor === 1">
+        PRIMER PISO
+      </button>
+      <button class="floor-btn" (click)="selectFloor(2)" [class.active]="selectedFloor === 2">
+        SEGUNDO PISO
+      </button>
+      <button class="floor-btn" (click)="selectFloor(3)" [class.active]="selectedFloor === 3">
+        TERCER PISO
+      </button>
+      <button class="floor-btn" (click)="selectFloor(4)" [class.active]="selectedFloor === 4">
+        CUARTO PISO
+      </button>
+    </div>
+
+    <!-- Card con Imagen Dinámica -->
+    <div class="image-card">
+      <img [src]="currentFloorImage" [alt]="'Piso ' + selectedFloor" class="floor-image">
+      <div class="floor-info">
+        <h3>{{ currentFloorTitle }}</h3>
+        <p>{{ currentFloorDescription }}</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,238 @@
+<div class="mensual-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Reporte Mensual</h1>
+    <div class="user-info">
+      <span>{{ currentUser.name }}</span>
+    </div>
+  </div>
+
+  <!-- Filtros y controles -->
+  <div class="controles-superiores">
+    <div class="filtros">
+      <select [(ngModel)]="mesSeleccionado" (change)="onMesChange()" class="select-filtro">
+        <option *ngFor="let mes of meses; let i = index" [value]="i">
+          {{ mes }}
+        </option>
+      </select>
+      <select [(ngModel)]="anioSeleccionado" (change)="onAnioChange()" class="select-filtro">
+        <option value="2026">2026</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+      </select>
+    </div>
+    
+    <div class="controles-vista">
+      <button 
+        class="btn-vista" 
+        [class.active]="vistaActual === 'resumen'"
+        (click)="cambiarVista('resumen')"
+      >
+        <i class="fas fa-chart-pie"></i>
+        Resumen
+      </button>
+      <button 
+        class="btn-vista" 
+        [class.active]="vistaActual === 'detalles'"
+        (click)="cambiarVista('detalles')"
+      >
+        <i class="fas fa-list"></i>
+        Detalles
+      </button>
+      <button class="btn-exportar" (click)="exportarReporte()">
+        <i class="fas fa-download"></i>
+        Exportar
+      </button>
+      <button class="btn-imprimir" (click)="imprimirReporte()">
+        <i class="fas fa-print"></i>
+        Imprimir
+      </button>
+    </div>
+  </div>
+
+  <!-- Vista de Resumen -->
+  <div class="vista-resumen" *ngIf="vistaActual === 'resumen'">
+    <!-- Tarjetas principales -->
+    <div class="resumen-grid">
+      <!-- Tarjeta de totales -->
+      <div class="tarjeta-resumen principal">
+        <div class="tarjeta-header">
+          <h3>📊 Resumen Mensual</h3>
+          <span class="periodo">{{ meses[mesSeleccionado] }} {{ anioSeleccionado }}</span>
+        </div>
+        <div class="tarjeta-contenido">
+          <div class="metrica-principal">
+            <span class="label">Total Ventas</span>
+            <span class="valor">${{ resumenMensual.totalVentas | number:'1.2-2' }}</span>
+          </div>
+          <div class="metricas-desglose">
+            <div class="metrica">
+              <span class="label">Pagado</span>
+              <span class="valor pagado">${{ resumenMensual.totalPagado | number:'1.2-2' }}</span>
+              <span class="porcentaje">{{ getPorcentajePagado() | number:'1.1-1' }}%</span>
+            </div>
+            <div class="metrica">
+              <span class="label">Pendiente</span>
+              <span class="valor pendiente">${{ resumenMensual.totalPendiente | number:'1.2-2' }}</span>
+              <span class="porcentaje">{{ getPorcentajePendiente() | number:'1.1-1' }}%</span>
+            </div>
+          </div>
+          <div class="metrica">
+            <span class="label">Cantidad de Ventas</span>
+            <span class="valor">{{ resumenMensual.cantidadVentas }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Habitación más rentable -->
+      <div class="tarjeta-resumen">
+        <div class="tarjeta-header">
+          <h3>🏆 Habitación Más Rentable</h3>
+        </div>
+        <div class="tarjeta-contenido">
+          <div class="habitacion-info">
+            <span class="habitacion-nombre">{{ resumenMensual.habitacionMasRentable.habitacion }}</span>
+            <div class="habitacion-metricas">
+              <div class="metrica">
+                <span class="label">Ingresos</span>
+                <span class="valor">${{ resumenMensual.habitacionMasRentable.ingresos | number:'1.2-2' }}</span>
+              </div>
+              <div class="metrica">
+                <span class="label">Ventas</span>
+                <span class="valor">{{ resumenMensual.habitacionMasRentable.ventas }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráficos y estadísticas -->
+    <div class="estadisticas-grid">
+      <!-- Productos más vendidos -->
+      <div class="tarjeta-estadistica">
+        <div class="tarjeta-header">
+          <h3>🏆 Productos Más Vendidos</h3>
+        </div>
+        <div class="tarjeta-contenido">
+          <div class="productos-ranking">
+            <div class="producto-ranking" *ngFor="let producto of resumenMensual.productosMasVendidos; let i = index">
+              <span class="ranking">{{ i + 1 }}</span>
+              <span class="producto-nombre">{{ producto.nombre }}</span>
+              <span class="producto-cantidad">{{ producto.cantidad }} unidades</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ventas por día -->
+      <div class="tarjeta-estadistica">
+        <div class="tarjeta-header">
+          <h3>📈 Ventas por Día</h3>
+        </div>
+        <div class="tarjeta-contenido">
+          <div class="ventas-diarias">
+            <div class="venta-dia" *ngFor="let venta of resumenMensual.ventasPorDia">
+              <span class="dia">Día {{ venta.dia }}</span>
+              <div class="venta-info">
+                <span class="total">${{ venta.total | number:'1.2-2' }}</span>
+                <span class="cantidad">{{ venta.cantidad }} ventas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estadísticas de Habitaciones -->
+    <div class="habitaciones-section">
+      <div class="tarjeta-habitaciones">
+        <div class="tarjeta-header">
+          <h3>🏠 Estadísticas de Habitaciones</h3>
+        </div>
+        <div class="tarjeta-contenido">
+          <div class="habitaciones-grid">
+            <div class="habitacion-card" *ngFor="let habitacion of resumenMensual.habitacionesEstadisticas">
+              <div class="habitacion-header">
+                <div class="habitacion-info">
+                  <span class="habitacion-nombre">{{ habitacion.habitacion }}</span>
+                  <span class="habitacion-tipo">{{ habitacion.tipo }}</span>
+                </div>
+                <div class="habitacion-estado">
+                  <span class="estado-badge" [ngClass]="getEstadoHabitacionClass(habitacion.estado)">
+                    <i [class]="getEstadoHabitacionIcon(habitacion.estado)"></i>
+                    {{ habitacion.estado }}
+                  </span>
+                </div>
+              </div>
+              <div class="habitacion-metricas">
+                <div class="metrica">
+                  <span class="label">Ingresos</span>
+                  <span class="valor">${{ habitacion.ingresos | number:'1.2-2' }}</span>
+                </div>
+                <div class="metrica">
+                  <span class="label">Ventas</span>
+                  <span class="valor">{{ habitacion.ventas }}</span>
+                </div>
+                <div class="metrica">
+                  <span class="label">Ocupación</span>
+                  <div class="ocupacion-barra">
+                    <div class="ocupacion-progreso" 
+                         [ngClass]="getOcupacionColor(habitacion.ocupacion)"
+                         [style.width.%]="habitacion.ocupacion">
+                    </div>
+                    <span class="ocupacion-valor">{{ habitacion.ocupacion }}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista de Detalles -->
+  <div class="vista-detalles" *ngIf="vistaActual === 'detalles'">
+    <div class="tabla-container">
+      <table class="tabla-ventas">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Habitación</th>
+            <th>Productos</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let venta of ventasMensuales">
+            <td>{{ venta.id }}</td>
+            <td>{{ venta.cliente }}</td>
+            <td>{{ venta.habitacion }}</td>
+            <td>
+              <div class="productos-cell">
+                <span *ngFor="let producto of venta.productos; let last = last" 
+                      class="producto-tag">
+                  {{ producto }}{{ last ? '' : ', ' }}
+                </span>
+              </div>
+            </td>
+            <td class="total">${{ venta.total | number:'1.2-2' }}</td>
+            <td>
+              <span class="estado-badge" [ngClass]="getEstadoClass(venta.estado)">
+                <i [class]="getEstadoIcon(venta.estado)"></i>
+                {{ venta.estado }}
+              </span>
+            </td>
+            <td>{{ venta.fecha }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

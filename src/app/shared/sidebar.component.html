@@ -1,0 +1,81 @@
+<div class="page-container">
+  <!-- Left Sidebar -->
+  <aside class="sidebar left-sidebar">
+    <!-- Logo del Hotel -->
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <img src="assets/logo-image.png" alt="HOSPEDAJE L&V Logo" class="logo-image">
+      </div>
+    </div>
+
+    <!-- Información del Usuario -->
+    <div class="user-profile">
+      <div class="profile-avatar">
+        <i class="bx bx-user"></i>
+      </div>
+      <div class="user-name-container">
+        <span class="user-name">{{ userName }}</span>
+        <div class="status-indicator online"></div>
+      </div>
+    </div>
+
+    <!-- Menú de Navegación -->
+    <nav class="main-nav">
+      <ul>
+        <li *ngFor="let item of menuItems">
+          <a [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <div class="nav-content">
+              <div class="nav-left">
+                <i [class]="item.icon"></i>
+                <span>{{ item.label }}</span>
+              </div>
+              <i class="bx bx-chevron-right arrow-icon" *ngIf="item.label === 'Recepción'"></i>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- Botón Cerrar Sesión -->
+    <div class="logout-section">
+      <button class="logout-btn" (click)="logout()">
+        <i class="bx bx-log-out"></i> CERRAR SESIÓN
+      </button>
+    </div>
+  </aside>
+
+   <!-- Área de contenido principal -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Right Sidebar -->
+  <aside class="sidebar right-sidebar" *ngIf="showRightColumn">
+    <!-- Sección de Horario y Calendario -->
+    <div class="time-section">
+      <div class="time-header">
+        <span class="time-label">HORARIO</span>
+      </div>
+
+      <div class="clock-container">
+        <div class="digital-clock">
+          <div class="time-display">{{ currentTime }}</div>
+          <div class="date-display">{{ currentDate }}</div>
+        </div>
+      </div>
+
+      <!-- Mini Calendario -->
+      <div class="mini-calendar">
+        <div class="calendar-header">
+          <span class="month-year">{{ currentMonth | uppercase }}</span>
+        </div>
+        <div class="calendar-grid">
+          <div class="weekday" *ngFor="let day of dayNames">{{ day }}</div>
+          <div class="calendar-day empty" *ngFor="let empty of emptyDays"></div>
+          <div class="calendar-day" *ngFor="let day of daysInMonth" [class.today]="isToday(day)">
+            {{ day }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>

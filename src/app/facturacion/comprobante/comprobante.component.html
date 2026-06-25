@@ -1,0 +1,286 @@
+<div class="boleta-container">
+  <!-- Header -->
+  <div class="header">
+    <h1 *ngIf="!datosReserva">📋 Emitir Comprobante</h1>
+    <h1 *ngIf="datosReserva && tipoComprobanteActual === 'boleta'">📋 Emitir Boleta</h1>
+    <h1 *ngIf="datosReserva && tipoComprobanteActual === 'factura'">🧾 Emitir Factura</h1>
+    <div class="user-info">
+      <span>{{ currentUser.name }}</span>
+    </div>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Diseño específico para FACTURA -->
+    <div *ngIf="tipoComprobanteActual === 'factura' && datosReserva" class="factura-design">
+      <!-- Encabezado de Factura -->
+      <div class="factura-header">
+        <div class="factura-logo">
+          <span class="logo-text">LOGO</span>
+        </div>
+        <div class="factura-title">
+          <h1>Hotel LAY</h1>
+          <p>{{ empresa.direccion }}</p>
+          <p>Tel: {{ empresa.telefono }}</p>
+        </div>
+        <div class="factura-numero">
+          <h2>Factura N.°</h2>
+          <p>{{ serieBoleta }}-{{ numeroBoleta }}</p>
+        </div>
+      </div>
+
+      <!-- Datos de la empresa y factura -->
+      <div class="factura-empresa-info">
+        <div class="info-row">
+          <span class="label">RUC:</span>
+          <span class="value">{{ empresa.ruc }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Fecha:</span>
+          <span class="value">{{ fechaEmision | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Hora:</span>
+          <span class="value">{{ horaEmision }}</span>
+        </div>
+      </div>
+
+      <!-- Datos del cliente -->
+      <div class="factura-cliente">
+        <div class="info-row">
+          <span class="label">RUC:</span>
+          <span class="value">{{ clienteBoleta?.numeroDocumento }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Señor/a:</span>
+          <span class="value">{{ clienteBoleta?.nombresApellidos }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Dirección:</span>
+          <span class="value">{{ clienteBoleta?.direccion || 'Av. Principal 123 – Lima, Perú' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Teléfono:</span>
+          <span class="value">{{ clienteBoleta?.telefono || '987 654 321' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Correo:</span>
+          <span class="value">{{ clienteBoleta?.email || 'reservas@hotellay.com' }}</span>
+        </div>
+      </div>
+
+      <!-- Datos de la reserva -->
+      <div class="factura-reserva">
+        <div class="info-row">
+          <span class="label">Habitación:</span>
+          <span class="value">{{ clienteBoleta?.numeroHabitacion }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Tipo:</span>
+          <span class="value">{{ clienteBoleta?.tipoHabitacion }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Ingreso:</span>
+          <span class="value">{{ clienteBoleta?.fechaIngreso | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Salida:</span>
+          <span class="value">{{ clienteBoleta?.fechaSalida | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+
+      <!-- Detalles de pago -->
+      <div class="factura-pago">
+        <div class="info-row">
+          <span class="label">Trabajador:</span>
+          <span class="value">{{ trabajadorNombre }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Método pago:</span>
+          <span class="value">{{ metodoPago }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Estado:</span>
+          <span class="value estado-pagado">{{ estadoPagoFactura }}</span>
+        </div>
+      </div>
+
+      <!-- Tabla de productos/servicios -->
+      <div class="factura-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Cantidad</th>
+              <th>Descripción</th>
+              <th>P. Unitario</th>
+              <th>IGV</th>
+              <th>Importe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of itemsBoleta">
+              <td>{{ item.cantidad }}</td>
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.precio | number:'1.2-2' }}</td>
+              <td>{{ (item.precio * 0.18) | number:'1.2-2' }}</td>
+              <td>{{ item.subtotal | number:'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Totales -->
+      <div class="factura-totales">
+        <div class="total-row">
+          <span class="label">Subtotal:</span>
+          <span class="value">S/ {{ gravada | number:'1.2-2' }}</span>
+        </div>
+        <div class="total-row">
+          <span class="label">IGV (18%):</span>
+          <span class="value">S/ {{ igv | number:'1.2-2' }}</span>
+        </div>
+        <div class="total-row total-final">
+          <span class="label">Total:</span>
+          <span class="value">S/ {{ totalBoleta | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <!-- Observaciones -->
+      <div class="factura-observaciones">
+        <p><strong>Observaciones:</strong> Incluye servicio de hospedaje y limpieza.</p>
+      </div>
+
+      <!-- Mensaje final -->
+      <div class="factura-mensaje">
+        <p>Gracias por hospedarse con nosotros. Hotel LAY le desea un excelente día.</p>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="factura-acciones">
+        <button class="btn-imprimir" (click)="imprimirBoleta()">
+          <i class="fas fa-print"></i>
+          Imprimir Factura
+        </button>
+        <button class="btn-cancelar" (click)="volver()">
+          <i class="fas fa-arrow-left"></i>
+          Volver
+        </button>
+      </div>
+    </div>
+
+    <!-- Diseño simplificado para BOLETA con datos de reserva -->
+    <div *ngIf="tipoComprobanteActual === 'boleta' && datosReserva" class="boleta-reserva-design">
+      <!-- Información de la Empresa -->
+      <div class="empresa-info">
+        <h2> Datos de la Empresa</h2>
+        <div class="empresa-card">
+          <div class="empresa-header">
+            <h3>{{ empresa.razonSocial }}</h3>
+            <span class="ruc">RUC: {{ empresa.ruc }}</span>
+          </div>
+          <div class="empresa-details">
+            <div class="info-item">
+              <span class="label">📞 Teléfono:</span>
+              <span class="value">{{ empresa.telefono }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">📧 Email:</span>
+              <span class="value">{{ empresa.email }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">📍 Dirección:</span>
+              <span class="value">{{ empresa.direccion }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información del Cliente -->
+      <div class="cliente-info">
+        <h2>Datos del Cliente</h2>
+        <div *ngIf="clienteBoleta" class="cliente-card">
+          <div class="cliente-header">
+            <h3>{{ clienteBoleta.nombresApellidos }}</h3>
+            <span class="documento">{{ clienteBoleta.tipoDocumento }}: {{ clienteBoleta.numeroDocumento }}</span>
+          </div>
+          <div class="cliente-details">
+            <div class="info-item">
+              <span class="label">📞 Teléfono:</span>
+              <span class="value">{{ clienteBoleta.telefono || 'No registrado' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">🏠 Habitación:</span>
+              <span class="value">{{ clienteBoleta.tipoHabitacion }} - {{ clienteBoleta.numeroHabitacion }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">📅 Fecha Ingreso:</span>
+              <span class="value">{{ clienteBoleta.fechaIngreso }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">📅 Fecha Salida:</span>
+              <span class="value">{{ clienteBoleta.fechaSalida }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items de la Boleta -->
+      <div class="items-boleta" *ngIf="itemsBoleta.length > 0">
+        <h2>Detalle de la Boleta</h2>
+        <div class="boleta-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Cantidad</th>
+                <th>Descripción</th>
+                <th>Precio Unit.</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of itemsBoleta">
+                <td>{{ item.cantidad }}</td>
+                <td>{{ item.nombre }}</td>
+                <td>${{ item.precio | number:'1.2-2' }}</td>
+                <td>${{ item.subtotal | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Totales -->
+      <div class="resumen-totales">
+        <div class="totales-grid">
+          <div class="total-item">
+            <label>Op. Gravada:</label>
+            <span>S/. {{ gravada | number:'1.2-2' }}</span>
+          </div>
+          <div class="total-item">
+            <label>IGV (18%):</label>
+            <span>S/. {{ igv | number:'1.2-2' }}</span>
+          </div>
+          <div class="total-item destacado">
+            <label>Total a Pagar:</label>
+            <span>S/. {{ totalBoleta | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div class="acciones-boleta">
+        <button class="btn-imprimir" (click)="imprimirBoleta()">
+          <i class="fas fa-print"></i>
+          Imprimir Boleta
+        </button>
+        <button class="btn-cancelar" (click)="volver()">
+          <i class="fas fa-arrow-left"></i>
+          Volver
+        </button>
+      </div>
+    </div>
+
+   
+
+    </div>
+      
+   

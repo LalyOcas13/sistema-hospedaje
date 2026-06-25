@@ -1,0 +1,355 @@
+.dashboard-container {
+  position: relative;
+  min-height: 100vh;
+  background-image: url('../../../assets/fondo-hotel-inicio.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 2;
+  padding: 60px 40px;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.content-wrapper h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  animation: fadeInUp 1s ease-out;
+}
+
+/* Botones de Pisos */
+.floor-buttons {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 40px;
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.floor-btn {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.floor-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.floor-btn.active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #2c3e50;
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Card con Imagen */
+.image-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 100%;
+  animation: fadeInUp 1s ease-out 0.6s both;
+  backdrop-filter: blur(10px);
+}
+
+.floor-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.floor-info {
+  padding: 30px;
+  text-align: center;
+}
+
+.floor-info h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.floor-info p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin: 0;
+  line-height: 1.6;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 40px 20px;
+  }
+  
+  .content-wrapper h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+  
+  .floor-buttons {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .floor-btn {
+    width: 100%;
+  }
+  
+  .image-card {
+    max-width: 100%;
+  }
+  
+  .floor-image {
+    height: 200px;
+  }
+  
+  .floor-info {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-wrapper h1 {
+    font-size: 2rem;
+  }
+  
+  .floor-btn {
+    font-size: 1rem;
+    padding: 12px 25px;
+  }
+  
+  .floor-info h3 {
+    font-size: 1.5rem;
+  }
+  
+  .floor-info p {
+    font-size: 1rem;
+  }
+}
+
+/* Estilos para las habitaciones */
+.habitaciones-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 1200px;
+  width: 100%;
+  animation: fadeInUp 1s ease-out 0.6s both;
+  backdrop-filter: blur(10px);
+}
+
+.habitaciones-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.habitaciones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.habitacion-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid #e0e0e0;
+}
+
+.habitacion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  border-color: #3498db;
+}
+
+.habitacion-imagen {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.habitacion-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.habitacion-card:hover .habitacion-imagen img {
+  transform: scale(1.05);
+}
+
+.habitacion-estado {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 8px 15px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(5px);
+}
+
+.habitacion-estado.disponible {
+  background: rgba(46, 204, 113, 0.9);
+  color: white;
+}
+
+.habitacion-estado.ocupada {
+  background: rgba(231, 76, 60, 0.9);
+  color: white;
+}
+
+.habitacion-info {
+  padding: 25px;
+  text-align: center;
+}
+
+.habitacion-info h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.habitacion-info .tipo {
+  font-size: 1rem;
+  color: #7f8c8d;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.habitacion-info .precio {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #3498db;
+  margin-bottom: 20px;
+}
+
+.reservar-btn {
+  width: 100%;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.reservar-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2980b9, #21618c);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.reservar-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive para habitaciones */
+@media (max-width: 768px) {
+  .habitaciones-container {
+    padding: 25px;
+  }
+  
+  .habitaciones-title {
+    font-size: 2rem;
+  }
+  
+  .habitaciones-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .habitacion-info {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .habitaciones-container {
+    padding: 20px;
+  }
+  
+  .habitaciones-title {
+    font-size: 1.8rem;
+  }
+  
+  .habitaciones-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .habitacion-imagen {
+    height: 180px;
+  }
+}

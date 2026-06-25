@@ -1,0 +1,29 @@
+<div *ngIf="visible" class="modal-overlay" (click)="onCerrar()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="icono">{{ iconoTipo }}</span>
+        <h3>{{ data.titulo }}</h3>
+      </div>
+      <button class="btn-cerrar" (click)="onCerrar()" aria-label="Cerrar">
+        ×
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <p>{{ data.mensaje }}</p>
+    </div>
+    
+    <div class="modal-footer">
+      <button 
+        *ngIf="data.tipo === 'confirmacion'" 
+        class="btn btn-cancelar" 
+        (click)="onCancelar()">
+        {{ data.textoCancelar || 'Cancelar' }}
+      </button>
+      <button class="btn btn-aceptar" (click)="onAceptar()">
+        {{ data.textoAceptar || 'Aceptar' }}
+      </button>
+    </div>
+  </div>
+</div>

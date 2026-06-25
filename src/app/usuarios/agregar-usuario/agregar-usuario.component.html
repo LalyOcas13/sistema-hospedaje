@@ -1,0 +1,114 @@
+<!-- Modal Overlay -->
+<div class="modal-overlay" *ngIf="isVisible" (click)="onOverlayClick($event)">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Header del Modal -->
+    <div class="modal-header">
+      <h2>Agregar Nuevo Usuario</h2>
+      <button class="close-button" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Contenido del Modal -->
+    <div class="modal-content">
+      <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nombres">Nombres</label>
+            <input 
+              type="text" 
+              id="nombres" 
+              formControlName="nombres"
+              placeholder="Ingrese nombres"
+              [class.is-invalid]="submitted && f['nombres'].errors"
+            >
+            <div class="invalid-feedback" *ngIf="submitted && f['nombres'].errors && f['nombres'].errors['required']">
+              Los nombres son requeridos
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="apellidos">Apellidos</label>
+            <input 
+              type="text" 
+              id="apellidos" 
+              formControlName="apellidos"
+              placeholder="Ingrese apellidos"
+              [class.is-invalid]="submitted && f['apellidos'].errors"
+            >
+            <div class="invalid-feedback" *ngIf="submitted && f['apellidos'].errors && f['apellidos'].errors['required']">
+              Los apellidos son requeridos
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Correo Electrónico</label>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email"
+              placeholder="ejemplo@correo.com"
+              [class.is-invalid]="submitted && f['email'].errors"
+            >
+            <div class="invalid-feedback" *ngIf="submitted && f['email'].errors && f['email'].errors['required']">
+              El correo es requerido
+            </div>
+            <div class="invalid-feedback" *ngIf="submitted && f['email'].errors && f['email'].errors['email']">
+              Formato de correo inválido
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="rol">Rol</label>
+            <select 
+              id="rol" 
+              formControlName="rol"
+              [class.is-invalid]="submitted && f['rol'].errors"
+            >
+              <option value="">Seleccionar rol</option>
+              <option value="Administrador">Administrador</option>
+              <option value="Recepcionista">Recepcionista</option>
+              <option value="Empleado">Empleado</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="submitted && f['rol'].errors && f['rol'].errors['required']">
+              El rol es requerido
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="estado">Estado</label>
+            <select 
+              id="estado" 
+              formControlName="estado"
+              [class.is-invalid]="submitted && f['estado'].errors"
+            >
+              <option value="">Seleccionar estado</option>
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="submitted && f['estado'].errors && f['estado'].errors['required']">
+              El estado es requerido
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer del Modal -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+        Cancelar
+      </button>
+      <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="isLoading">
+        <i class="fas fa-save" *ngIf="!isLoading"></i>
+        <i class="fas fa-spinner fa-spin" *ngIf="isLoading"></i>
+        {{ isLoading ? 'Guardando...' : 'Guardar Usuario' }}
+      </button>
+    </div>
+  </div>
+</div>

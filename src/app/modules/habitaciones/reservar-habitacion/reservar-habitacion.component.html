@@ -1,0 +1,194 @@
+  <div class="reserva-container" *ngIf="habitacion; else cargando">
+  <div class="reserva-header">
+    <button class="btn-volver" (click)="volver()">
+      <i class="fas fa-arrow-left"></i>
+      Volver
+    </button>
+    <h2>Reservar Habitación</h2>
+  </div>
+
+  <div class="reserva-content">
+    <!-- Información de la habitación -->
+    <div class="habitacion-info">
+      <h3>Habitación {{ habitacion.numero }}</h3>
+      <p><strong>Tipo:</strong> {{ habitacion.tipo }}</p>
+      <p><strong>Precio:</strong> ${{ habitacion.precio }} por noche</p>
+      <p><strong>Estado:</strong> <span class="estado-disponible">{{ habitacion.estado }}</span></p>
+      <p><strong>Capacidad:</strong> {{ habitacion.capacidad }} personas</p>
+      <p><strong>Piso:</strong> {{ habitacion.piso }}</p>
+      <p><strong>Descripción:</strong> {{ habitacion.descripcion }}</p>
+    </div>
+
+    <!-- Formulario de reserva -->
+    <div class="reserva-form">
+      <h3>Información de la Reserva</h3>
+      <form [formGroup]="reservaForm" (ngSubmit)="guardarReserva()">
+        
+        <!-- Datos del cliente -->
+        <div class="form-section">
+          <h4>Datos del Cliente</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="identificacion">Identificación:</label>
+              <div class="input-with-indicator">
+                <input 
+                  type="text" 
+                  id="identificacion" 
+                  formControlName="identificacion" 
+                  placeholder="Ingrese su DNI o pasaporte"
+                  (input)="onIdentificacionChange()"
+                  required
+                >
+                <div class="search-indicator" *ngIf="buscandoCliente">
+                  <i class="fas fa-spinner fa-spin"></i>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="nombreCliente">Nombre Completo:</label>
+              <input 
+                type="text" 
+                id="nombreCliente" 
+                formControlName="nombreCliente" 
+                placeholder="Ingrese su nombre completo"
+                required
+              >
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="telefono">Teléfono:</label>
+              <input 
+                type="tel" 
+                id="telefono" 
+                formControlName="telefono" 
+                placeholder="Número de teléfono (opcional)"
+              >
+            </div>
+            <div class="form-group">
+              <label for="acompanante">Acompañante:</label>
+              <input 
+                type="text" 
+                id="acompanante" 
+                formControlName="acompanante" 
+                placeholder="Nombre del acompañante (opcional)"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Detalles de la estancia -->
+        <div class="form-section">
+          <h4>Detalles de la Estancia</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tipoRegistro">Tipo de Registro:</label>
+              <select id="tipoRegistro" formControlName="tipoRegistro" (change)="onTipoRegistroChange()">
+                <option value="hospedar">Hospedar</option>
+                <option value="reserva">Reserva</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tiempo">{{ getTiempoLabel() }}</label>
+              <input 
+                type="number" 
+                id="tiempo" 
+                formControlName="tiempo" 
+                [placeholder]="getTiempoPlaceholder()"
+                [step]="getTiempoStep()"
+                [min]="getTiempoMin()"
+                required
+              >
+              <small class="form-help">{{ getTiempoAyuda() }}</small>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fecha">Fecha:</label>
+              <input 
+                type="date" 
+                id="fecha" 
+                formControlName="fecha" 
+                [min]="fechaMinima"
+                required
+              >
+            </div>
+            <div class="form-group">
+              <label for="horaEntrada">Hora de Entrada:</label>
+              <input 
+                type="time" 
+                id="horaEntrada" 
+                formControlName="horaEntrada"
+              >
+            </div>
+            <div class="form-group">
+              <label for="horaSalida">Hora de Salida:</label>
+              <input 
+                type="time" 
+                id="horaSalida" 
+                formControlName="horaSalida"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Descuento -->
+        <div class="form-section">
+          <h4>Descuento</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="descuento">Descuento (%):</label>
+              <input 
+                type="number" 
+                id="descuento" 
+                formControlName="descuento" 
+                min="0" 
+                max="100" 
+                step="0.1"
+                placeholder="0"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen del pago -->
+        <div class="resumen-pago">
+          <h4>Resumen del Pago</h4>
+          <div class="pago-item">
+            <span>Subtotal:</span>
+            <span>${{ getSubtotal() | number:'1.2-2' }}</span>
+          </div>
+          <div class="pago-item" *ngIf="getDescuentoPorcentaje() > 0">
+            <span>Descuento ({{ getDescuentoPorcentaje() }}%):</span>
+            <span>-${{ getMontoDescuento() | number:'1.2-2' }}</span>
+          </div>
+          <div class="pago-item total">
+            <span>Total a Pagar:</span>
+            <span>${{ calcularTotalConDescuento() | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+     
+        <!-- Botones de acción -->
+        <div class="form-actions">
+          <button type="button" class="btn-cancelar" (click)="volver()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-guardar" [disabled]="reservaForm.invalid">
+            Registrar Reserva
+          </button>
+          
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Template para cargando -->
+<ng-template #cargando>
+  <div class="cargando-container">
+    <div class="spinner"></div>
+    <p>Cargando información de la habitación...</p>
+  </div>
+</ng-template>
