@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
 import { ClientesService, CrearClienteRequest } from '../services/clientes.service';
 import { MensajeFlotanteService } from '../../shared/mensaje-flotante/mensaje-flotante.service';
+import { ConsultaDniService } from '../services/consulta-dni.service';
 
 interface ClienteFrontend {
   id: number;
@@ -43,8 +44,15 @@ export class ClientesComponent implements OnInit {
   isLoading: boolean = false;
   isEditMode: boolean = false;
   clienteEditando: ClienteFrontend | null = null;
+  consultandoDNI: boolean = false;
 
-  constructor(private authService: AuthService, private fb: FormBuilder, private clientesService: ClientesService, private mensajeFlotanteService: MensajeFlotanteService) {}
+  constructor(
+    private authService: AuthService,
+    private fb: FormBuilder,
+    private clientesService: ClientesService,
+    private mensajeFlotanteService: MensajeFlotanteService,
+    private consultaDniService: ConsultaDniService
+  ) {}
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
@@ -340,5 +348,50 @@ export class ClientesComponent implements OnInit {
         }
       });
     }
+  }
+
+  consultarDNI(): void {
+    const dni = this.clienteForm.get('nro_documento')?.value;
+    
+    // Validar que el DNI tenga 8 dígitos
+    if (!dni || dni.length !== 8) {
+      this.mensajeFlotanteService.mostrarAdvertencia(
+        'El DNI debe tener 8 dígitos',
+        'DNI Inválido'
+      );
+      return;
+    }
+
+    this.consultandoDNI = true;
+
+    this.consultaDniService.consultarDNI(dni).subscribe({
+      next: (datos) => {
+        if (datos.error) {
+          this.mensajeFlotanteService.mostrarAdvertencia(
+            datos.error,
+            'Error en Consulta'
+          );
+        } else {
+          // Autocompletar el formulario con los datos del DNI
+          this.clienteForm.patchValue({
+            nombres_apellidos: datos.nombre_completo
+          });
+          
+          this.mensajeFlotanteService.mostrarInfo(
+            'Datos del DNI cargados correctamente',
+            'Consulta Exitosa'
+          );
+        }
+        this.consultandoDNI = false;
+      },
+      error: (err) => {
+        console.error('❌ Error al consultar DNI:', err);
+        this.mensajeFlotanteService.mostrarError(
+          'Error al consultar el DNI. Verifique su conexión a internet.',
+          'Error'
+        );
+        this.consultandoDNI = false;
+      }
+    });
   }
 }

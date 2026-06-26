@@ -40,14 +40,8 @@
            [ngClass]="{
              'ocupado': habitacion.estado === 'ocupada',
              'disponible': habitacion.estado === 'disponible',
-             'reserva': habitacion.estado === 'reservada',
+             'reservada': habitacion.estado === 'reservada',
              'mantenimiento': habitacion.estado === 'mantenimiento'
-           }"
-           [ngStyle]="{
-             'background-color': habitacion.estado === 'ocupada' ? '#ff6b6b' : 
-                               habitacion.estado === 'disponible' ? '#4ecdc4' : 
-                               '#45b7d1',
-             'color': '#fff'
            }"
            (click)="reservarHabitacion(habitacion)"
            [class.cursor-pointer]="habitacion.estado === 'disponible'">

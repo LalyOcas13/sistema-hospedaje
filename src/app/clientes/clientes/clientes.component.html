@@ -1,288 +1,576 @@
 <div class="clientes-container">
+
   <!-- Header -->
+
   <div class="header">
+
     <h1>Registro de Clientes</h1>
+
     <div class="user-info">
+
       <span>{{ currentUser?.name || 'Laly Melissa Ocas Vasquez' }}</span>
+
     </div>
+
   </div>
+
+
 
   <!-- Controls -->
+
   <div class="controls-section">
+
     <button class="add-cliente-button" (click)="showAgregarClienteModal()">
+
       <i class="fas fa-plus"></i>
+
       Agregar Cliente
+
     </button>
+
     
+
     <div class="controls-and-search">
+
       <div class="display-records">
+
         <span>Mostrar</span>
+
         <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+
           <option value="5">5</option>
+
           <option value="10">10</option>
+
           <option value="25">25</option>
+
           <option value="50">50</option>
+
         </select>
+
         <span>registros</span>
+
       </div>
+
       
+
       <div class="search-bar">
+
         <i class="fas fa-search"></i>
+
         <input 
+
           type="text" 
+
           placeholder="Buscar..." 
+
           [(ngModel)]="searchTerm"
+
           (ngModelChange)="onSearchChange()"
+
         >
+
       </div>
+
     </div>
+
   </div>
+
+
 
   <!-- Table -->
+
   <div class="table-responsive">
+
     <table class="clientes-table">
+
       <thead>
+
         <tr>
+
           <th>N°</th>
+
           <th>Tipo de documento</th>
+
           <th>Número de documento</th>
+
           <th>Nombres y Apellidos</th>
+
           <th>Acompañante</th>
+
           <th>Nacionalidad</th>
+
           <th>Procedencia</th>
+
           <th>Placa</th>
+
           <th>tipo de vehículo</th>
+
           <th>Teléfono</th>
+
           <th>Estado</th>
+
           <th>Acciones</th>
+
         </tr>
+
       </thead>
+
       <tbody>
+
         <tr *ngFor="let cliente of paginatedClientes; let i = index">
+
           <td>{{ i + 1 }}</td>
+
           <td>{{ cliente.tipo_documento }}</td>
+
           <td>{{ cliente.nro_documento }}</td>
+
           <td>{{ cliente.nombres_apellidos }}</td>
+
           <td>{{ cliente.acompanante }}</td>
+
           <td>{{ cliente.nacionalidad }}</td>
+
           <td>{{ cliente.procedencia }}</td>
+
           <td>{{ cliente.placa }}</td>
+
           <td>{{ cliente.tipoVehiculo }}</td>
+
           <td>{{ cliente.telefono }}</td>
+
           <td>
+
             <span class="badge" [class]="cliente.estado === 'Activo' ? 'badge-success' : 'badge-danger'">
+
               {{ cliente.estado }}
+
             </span>
+
           </td>
+
           <td>
+
             <button class="action-button edit" (click)="editCliente(cliente)" title="Editar">
+
               <i class="fas fa-edit"></i>
+
             </button>
+
             <button class="action-button delete" (click)="deleteCliente(cliente)" title="Eliminar">
+
               <i class="fas fa-trash-alt"></i>
+
             </button>
+
           </td>
+
         </tr>
+
       </tbody>
+
     </table>
+
   </div>
+
+
 
   <!-- Pagination -->
+
   <div class="pagination" *ngIf="totalPages > 1">
+
     <button 
+
       class="pagination-button" 
+
       (click)="previousPage()" 
+
       [disabled]="currentPage === 1"
+
     >
+
       <i class="fas fa-chevron-left"></i>
+
     </button>
+
     
+
     <span class="page-info">Pag{{ currentPage }}</span>
+
     
+
     <button 
+
       class="pagination-button" 
+
       (click)="nextPage()" 
+
       [disabled]="currentPage === totalPages"
+
     >
+
       <i class="fas fa-chevron-right"></i>
+
     </button>
+
   </div>
+
+
 
   <!-- Modal Agregar Cliente -->
+
   <div class="modal-overlay" *ngIf="showModal" (click)="onOverlayClick($event)">
+
     <div class="modal-container" (click)="$event.stopPropagation()">
+
       <!-- Header del Modal -->
+
       <div class="modal-header">
+
         <h2>{{ isEditMode ? 'Editar Cliente' : 'Agregar Nuevo Cliente' }}</h2>
+
         <button class="close-button" (click)="hideAgregarClienteModal()">
+
           <i class="fas fa-times"></i>
+
         </button>
+
       </div>
+
+
 
       <!-- Contenido del Modal -->
+
       <div class="modal-content">
+
         <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+
           <div class="form-row">
+
             <div class="form-group">
+
               <label for="tipo_documento">Tipo de documento</label>
+
               <select 
+
                 id="tipo_documento" 
+
                 formControlName="tipo_documento"
+
                 [class.is-invalid]="submitted && f['tipo_documento'].errors"
+
               >
+
                 <option value="">Seleccionar tipo</option>
+
                 <option value="DNI">DNI (Peruano)</option>
+
                 <option value="CE">CE (Carnet de Extranjería)</option>
+
                 <option value="PASAPORTE">Pasaporte (Extranjero)</option>
+
               </select>
+
               <div class="invalid-feedback" *ngIf="submitted && f['tipo_documento'].errors && f['tipo_documento'].errors['required']">
+
                 El tipo de documento es requerido
+
               </div>
+
             </div>
+
           </div>
 
+
+
           <div class="form-row">
+
             <div class="form-group">
+
               <label for="nro_documento">Número de Documento</label>
+
               <input 
+
                 type="text" 
+
                 id="nro_documento" 
+
                 formControlName="nro_documento"
+
                 placeholder="Ingrese número de documento"
+
                 [class.is-invalid]="submitted && f['nro_documento'].errors"
+
               >
+
               <div class="invalid-feedback" *ngIf="submitted && f['nro_documento'].errors && f['nro_documento'].errors['required']">
+
                 El número de documento es requerido
+
               </div>
+
             </div>
+
           </div>
 
+
+
           <div class="form-row">
+
             <div class="form-group">
+
               <label for="nombres_apellidos">Nombres y Apellidos</label>
+
               <input 
+
                 type="text" 
+
                 id="nombres_apellidos" 
+
                 formControlName="nombres_apellidos"
+
                 placeholder="Ingrese nombres completos"
+
                 [class.is-invalid]="submitted && f['nombres_apellidos'].errors"
+
               >
+
               <div class="invalid-feedback" *ngIf="submitted && f['nombres_apellidos'].errors && f['nombres_apellidos'].errors['required']">
+
                 Los nombres y apellidos son requeridos
+
               </div>
+
             </div>
+
           </div>
 
+
+
           <div class="form-row">
+
             <div class="form-group">
+
               <label for="telefono">Teléfono</label>
+
               <input 
+
                 type="tel" 
+
                 id="telefono" 
+
                 formControlName="telefono"
+
                 placeholder="Número de teléfono"
+
                 [class.is-invalid]="submitted && f['telefono'].errors"
+
               >
+
               <div class="invalid-feedback" *ngIf="submitted && f['telefono'].errors && f['telefono'].errors['required']">
+
                 El teléfono es requerido
+
               </div>
+
             </div>
+
             
+
             <div class="form-group">
+
               <label for="acompanante">Acompañante</label>
+
               <input 
+
                 type="text" 
+
                 id="acompanante" 
+
                 formControlName="acompanante"
+
                 placeholder="Nombre del acompañante (opcional)"
+
               >
+
             </div>
+
           </div>
 
+
+
           <div class="form-row">
+
             <div class="form-group">
+
               <label for="nacionalidad">Nacionalidad</label>
+
               <select 
+
                 id="nacionalidad" 
+
                 formControlName="nacionalidad"
+
               >
+
                 <option value="">Seleccionar nacionalidad</option>
+
                 <option value="Peruana">Peruana</option>
+
                 <option value="Argentina">Argentina</option>
+
                 <option value="Chilena">Chilena</option>
+
                 <option value="Colombiana">Colombiana</option>
+
                 <option value="Ecuatoriana">Ecuatoriana</option>
+
                 <option value="Boliviana">Boliviana</option>
+
                 <option value="Otra">Otra</option>
+
               </select>
+
             </div>
+
             
+
             <div class="form-group">
+
               <label for="procedencia">Procedencia</label>
+
               <input 
+
                 type="text" 
+
                 id="procedencia" 
+
                 formControlName="procedencia"
+
                 placeholder="Ciudad de procedencia"
+
               >
+
             </div>
+
           </div>
 
+
+
           <div class="form-row">
+
             <div class="form-group">
+
               <label for="tipoVehiculo">Tipo de vehículo</label>
+
               <select 
+
                 id="tipoVehiculo" 
+
                 formControlName="tipoVehiculo"
+
               >
+
                 <option value="">Seleccionar tipo</option>
+
                 <option value="Automóvil">Automóvil</option>
+
                 <option value="SUV">SUV</option>
+
                 <option value="Pickup">Pickup</option>
+
                 <option value="Motocicleta">Motocicleta</option>
+
                 <option value="Van">Van</option>
+
                 <option value="Otro">Otro</option>
+
               </select>
+
             </div>
+
             
+
             <div class="form-group">
+
               <label for="placa">Placa</label>
+
               <input 
+
                 type="text" 
+
                 id="placa" 
+
                 formControlName="placa"
+
                 placeholder="Número de placa (opcional)"
+
               >
+
             </div>
+
           </div>
 
+
+
           <div class="form-row">
+
             <div class="form-group">
+
               <label for="estado">Estado del Cliente</label>
+
               <select 
+
                 id="estado" 
+
                 formControlName="estado"
+
               >
+
                 <option value="Activo" selected>Activo</option>
+
                 <option value="Inactivo">Inactivo</option>
+
               </select>
+
             </div>
+
           </div>
+
         </form>
+
       </div>
+
+
 
       <!-- Footer del Modal -->
+
       <div class="modal-footer">
+
         <button type="button" class="btn btn-secondary" (click)="hideAgregarClienteModal()">
+
           <i class="fas fa-times"></i>
+
           Cancelar
+
         </button>
+
         <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="isLoading">
+
           <i class="fas fa-save" *ngIf="!isLoading"></i>
+
           <i class="fas fa-spinner fa-spin" *ngIf="isLoading"></i>
+
           {{ isLoading ? (isEditMode ? 'Actualizando...' : 'Guardando...') : (isEditMode ? 'Actualizar Cliente' : 'Guardar Cliente') }}
+
         </button>
+
       </div>
+
     </div>
+
   </div>
+
 </div>
+
