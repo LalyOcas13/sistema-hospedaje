@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { HabitacionesService, Habitacion } from '../services/habitaciones.service';
 import { map } from 'rxjs/operators';
@@ -21,7 +21,8 @@ interface HabitacionFrontend {
   selector: 'app-listar-habitaciones',
   standalone: false,
   templateUrl: './listar-habitaciones.component.html',
-  styleUrl: './listar-habitaciones.component.css'
+  styleUrl: './listar-habitaciones.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class ListarHabitacionesComponent implements OnInit, AfterViewChecked {
   habitaciones: HabitacionFrontend[] = [];
