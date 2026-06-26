@@ -37,11 +37,12 @@
     <div class="grid-habitaciones">
       <div class="tarjeta-habitacion" 
            *ngFor="let habitacion of habitacionesFiltradas; trackBy: trackByHabitacion" 
-           [ngClass]="{
-             'ocupado': habitacion.estado === 'ocupada',
-             'disponible': habitacion.estado === 'disponible',
-             'reservada': habitacion.estado === 'reservada',
-             'mantenimiento': habitacion.estado === 'mantenimiento'
+           [ngStyle]="{
+             'background-color': habitacion.estado === 'ocupada' ? '#ff6b6b' : 
+                               habitacion.estado === 'disponible' ? '#4ecd72' : 
+                               habitacion.estado === 'reservada' ? '#45b7d1' : 
+                               habitacion.estado === 'mantenimiento' ? '#ffa500' : '#ccc',
+             'color': '#fff'
            }"
            (click)="reservarHabitacion(habitacion)"
            [class.cursor-pointer]="habitacion.estado === 'disponible'">
