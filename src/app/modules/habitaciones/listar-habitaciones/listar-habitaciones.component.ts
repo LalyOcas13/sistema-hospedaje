@@ -128,7 +128,8 @@ export class ListarHabitacionesComponent implements OnInit, AfterViewChecked {
         { id_habitacion: 103, numero: '103', tipo_habitacion: 'doble', precio: 120, estado: 'ocupada', capacidad: 2, piso: 1, descripcion: 'Habitación matrimonial con balcón' },
         { id_habitacion: 201, numero: '201', tipo_habitacion: 'Doble', precio: 90, estado: 'ocupada', capacidad: 2, piso: 2, descripcion: 'Habitación doble en segundo piso' },
         { id_habitacion: 202, numero: '202', tipo_habitacion: 'Individual', precio: 55, estado: 'disponible', capacidad: 1, piso: 2, descripcion: 'Habitación individual tranquila' },
-        { id_habitacion: 301, numero: '301', tipo_habitacion: 'Doble', precio: 150, estado: 'reservada', capacidad: 2, piso: 3, descripcion: 'Suite presidencial con jacuzzi' }
+        { id_habitacion: 301, numero: '301', tipo_habitacion: 'Doble', precio: 150, estado: 'reservada', capacidad: 2, piso: 3, descripcion: 'Suite presidencial con jacuzzi' },
+        { id_habitacion: 302, numero: '302', tipo_habitacion: 'Doble', precio: 100, estado: 'mantenimiento', capacidad: 2, piso: 3, descripcion: 'Habitación en mantenimiento' }
       ];
     }
     
