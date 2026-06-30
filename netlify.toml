@@ -1,6 +1,11 @@
 [build]
-  command = "ng build"
-  publish = "dist/hoteleria"
+  command = "ng build --configuration production --output-path dist/hoteleria/browser"
+  publish = "dist/hoteleria/browser"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 [[headers]]
   for = "/*"
